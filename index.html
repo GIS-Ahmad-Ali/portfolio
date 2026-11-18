@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahmad Ali | GIS Analyst & Remote Sensing Portfolio</title>
+
+  <!-- 2 Clean Modern Fonts Throughout -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       1. BRIGHT TEAL + CORAL ROSE PALETTE & HIGH-CONTRAST HEADINGS
+       ============================================================ */
+    :root {
+      --heading-dark: #091526;
+      --text-body: #334155;
+      --text-muted: #64748b;
+
+      --teal: #0d9488;
+      --teal-bright: #14b8a6;
+      --rose: #e11d48;
+      --rose-soft: #fb7185;
+
+      --bg-base: #f4f9f9;
+      --glass-surface: rgba(255, 255, 255, 0.78);
+      --glass-strong: rgba(255, 255, 255, 0.90);
+      --glass-border: rgba(255, 255, 255, 0.95);
+      --shadow-elevated: 0 20px 46px rgba(9, 21, 38, 0.08), 0 4px 18px rgba(13, 148, 136, 0.08);
+
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* ============================================================
+       2. RESET & BASE STYLES (NO HORIZONTAL SCROLL)
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text-body);
+      background-color: var(--bg-base);
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    img, canvas {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ============================================================
+       3. WORLD ATLAS TRANSPARENT BACKGROUND + GLASS DIFFUSION
+       ============================================================ */
+    .world-atlas-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      pointer-events: none;
+      background-color: #eef6f6;
+      background-image:
+        radial-gradient(circle at 80% 25%, rgba(20, 184, 166, 0.22), transparent 46%),
+        radial-gradient(circle at 18% 78%, rgba(225, 29, 72, 0.14), transparent 46%),
+        url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/1280px-World_map_-_low_resolution.svg.png');
+      background-size: cover, cover, 115% auto;
+      background-position: center, center, center 25%;
+      background-repeat: no-repeat;
+      opacity: 0.22;
+      filter: contrast(1.1) saturate(1.2);
+    }
+
+    .atlas-glass-tint {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(247, 251, 251, 0.62) 0%, rgba(240, 248, 248, 0.76) 100%);
+    }
+
+    /* ============================================================
+       4. SEAMLESS PHOTOREALISTIC 3D EARTH + ORBITING SATELLITE STAGE
+       ============================================================ */
+    .orbital-3d-backdrop {
+      position: fixed;
+      top: 50%;
+      right: -5%;
+      transform: translateY(-50%);
+      width: 820px;
+      height: 820px;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.52;
+      -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0.6) 64%, rgba(0, 0, 0, 0) 76%);
+      mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0.6) 64%, rgba(0, 0, 0, 0) 76%);
+    }
+
+    #unified-earth-orbit-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ============================================================
+       5. FLOATING PILL GLASS NAVBAR
+       ============================================================ */
+    .navbar-wrap {
+      position: sticky;
+      top: 16px;
+      z-index: 1000;
+      padding: 0 1rem;
+    }
+
+    .navbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1.5px solid #ffffff;
+      box-shadow: 0 10px 30px rgba(9, 21, 38, 0.08);
+      border-radius: 999px;
+      padding: 0.62rem 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-display);
+      font-size: 1.42rem;
+      font-weight: 700;
+      color: var(--heading-dark);
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(225, 29, 72, 0.15));
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand span {
+      color: var(--rose);
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-links a {
+      padding: 0.48rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--heading-dark);
+      transition: all 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(13, 148, 136, 0.11);
+      color: var(--teal);
+    }
+
+    .nav-links a.active {
+      background: linear-gradient(135deg, var(--teal), #0f766e);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.28);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.56rem 1.3rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: var(--heading-dark);
+      box-shadow: 0 6px 16px rgba(9, 21, 38, 0.18);
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--rose);
+      transform: translateY(-2px);
+    }
+
+    .hamburger {
+      display: none;
+      background: #ffffff;
+      border: 1px solid rgba(9, 21, 38, 0.1);
+      border-radius: 12px;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--heading-dark);
+    }
+
+    /* ============================================================
+       6. HERO SECTION
+       ============================================================ */
+    .hero-section {
+      position: relative;
+      min-height: calc(100vh - 82px);
+      display: flex;
+      align-items: center;
+      padding: 2.5rem 0 4.5rem;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.92fr;
+      gap: 2.75rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .greeting-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.44rem 1.15rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(13, 148, 136, 0.22);
+      color: var(--heading-dark);
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(9, 21, 38, 0.05);
+      margin-bottom: 1rem;
+    }
+
+    .hero-left h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.55rem, 5vw, 3.85rem);
+      font-weight: 700;
+      color: var(--heading-dark);
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.55rem;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(1.25rem, 2.3vw, 1.65rem);
+      font-weight: 700;
+      color: var(--heading-dark);
+      margin-bottom: 0.85rem;
+    }
+
+    .hero-subtitle span {
+      background: linear-gradient(120deg, var(--teal), var(--rose));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .accent-bar {
+      width: 56px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--teal), var(--rose));
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-bio {
+      font-size: 1.01rem;
+      color: var(--text-body);
+      max-width: 575px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-bio strong {
+      color: var(--heading-dark);
+    }
+
+    .inline-pillars {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.1rem;
+      background: var(--glass-strong);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid #ffffff;
+      border-radius: 18px;
+      padding: 0.85rem 1.25rem;
+      box-shadow: 0 8px 24px rgba(9, 21, 38, 0.06);
+      margin-bottom: 1.75rem;
+    }
+
+    .pillar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--heading-dark);
+    }
+
+    .pillar-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(13, 148, 136, 0.13);
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pillar-item:nth-child(3) .pillar-icon {
+      background: rgba(225, 29, 72, 0.12);
+      color: var(--rose);
+    }
+
+    .pillar-sep {
+      width: 1px;
+      height: 28px;
+      background: rgba(9, 21, 38, 0.14);
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.65rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.88rem 1.85rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.94rem;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .btn-solid {
+      background: linear-gradient(135deg, var(--teal), #0f766e);
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(13, 148, 136, 0.30);
+    }
+
+    .btn-solid:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(13, 148, 136, 0.42);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--heading-dark);
+      border: 1.5px solid rgba(9, 21, 38, 0.22);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      transform: translateY(-3px);
+    }
+
+    .hero-socials {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .circle-social {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(13, 148, 136, 0.2);
+      color: var(--heading-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(9, 21, 38, 0.05);
+      transition: all 0.25s ease;
+    }
+
+    .circle-social:hover {
+      background: linear-gradient(135deg, var(--teal), var(--rose));
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-3px);
+    }
+
+    /* ============================================================
+       7. HERO RIGHT: CLEAN SCULPTED PROFILE PHOTO FRAME
+       ============================================================ */
+    .hero-visual-cluster {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .orbital-ring-frame {
+      position: relative;
+      width: 380px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orbital-ring-frame::before {
+      content: "";
+      position: absolute;
+      inset: -14px;
+      border-radius: 42% 58% 54% 46% / 46% 44% 56% 54%;
+      border: 2px dashed rgba(13, 148, 136, 0.45);
+      animation: slowSpin 26s linear infinite;
+      pointer-events: none;
+    }
+
+    .profile-sculpted-frame {
+      position: relative;
+      width: 350px;
+      height: 375px;
+      border-radius: 36% 64% 58% 42% / 44% 38% 62% 56%;
+      background: linear-gradient(135deg, var(--teal), var(--rose));
+      padding: 6px;
+      box-shadow: 0 26px 56px rgba(9, 21, 38, 0.16), 0 0 34px rgba(13, 148, 136, 0.22);
+      overflow: hidden;
+      transition: transform 0.35s ease;
+    }
+
+    .profile-sculpted-frame:hover {
+      transform: scale(1.02);
+    }
+
+    .profile-inner-mask {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 50% 35%, #ffffff 48%, #e2f5f3 85%, #fce7f3 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .profile-inner-mask img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 12%;
+      mix-blend-mode: multiply;
+      z-index: 2;
+    }
+
+    .profile-slot-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 1.5rem;
+      z-index: 1;
+    }
+
+    .slot-avatar-badge {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--rose));
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(13, 148, 136, 0.30);
+    }
+
+    .profile-slot-placeholder strong {
+      font-family: var(--font-display);
+      font-size: 1.12rem;
+      color: var(--heading-dark);
+    }
+
+    .profile-slot-placeholder span {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--teal);
+      background: rgba(13, 148, 136, 0.10);
+      padding: 0.28rem 0.85rem;
+      border-radius: 999px;
+    }
+
+    /* ============================================================
+       8. GLASS CONTENT SECTIONS
+       ============================================================ */
+    section.section-block {
+      padding: 5.25rem 0;
+      scroll-margin-top: 82px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 660px;
+      margin: 0 auto 3rem;
+    }
+
+    .section-tag {
+      display: inline-block;
+      padding: 0.38rem 1.05rem;
+      border-radius: 999px;
+      background: var(--glass-strong);
+      border: 1px solid rgba(13, 148, 136, 0.25);
+      color: var(--teal);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.65rem;
+    }
+
+    .section-tag.rose {
+      border-color: rgba(225, 29, 72, 0.25);
+      color: var(--rose);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.8vw, 2.7rem);
+      font-weight: 700;
+      color: var(--heading-dark);
+      line-height: 1.15;
+    }
+
+    .section-header p {
+      margin-top: 0.6rem;
+      color: var(--text-body);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .about-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .about-feature-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 1.85rem;
+      box-shadow: var(--shadow-elevated);
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .about-feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 44px rgba(13, 148, 136, 0.15);
+    }
+
+    .about-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.16), rgba(225, 29, 72, 0.16));
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.24rem;
+      font-weight: 700;
+      color: var(--heading-dark);
+      margin-bottom: 0.55rem;
+    }
+
+    .about-feature-card p {
+      font-size: 0.94rem;
+      color: var(--text-body);
+    }
+
+    /* Skills Grid (8 Skills with Progress Bars) */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.35rem;
+    }
+
+    .skill-item {
+      background: var(--glass-surface);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 1.3rem 1.5rem;
+      box-shadow: var(--shadow-elevated);
+      transition: transform 0.25s ease;
+    }
+
+    .skill-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .skill-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+    }
+
+    .skill-name {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--heading-dark);
+    }
+
+    .skill-pct {
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(13, 148, 136, 0.13);
+      color: var(--teal);
+    }
+
+    .skill-item:nth-child(even) .skill-pct {
+      background: rgba(225, 29, 72, 0.12);
+      color: var(--rose);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(9, 21, 38, 0.08);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--teal), var(--rose));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+      animation: shimmer 2.3s infinite;
+    }
+
+    /* ============================================================
+       9. PROJECTS SECTION (2 CARDS WITH REALISTIC PHOTOGRAPHS)
+       ============================================================ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .project-card {
+      background: var(--glass-surface);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-elevated);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 24px 48px rgba(13, 148, 136, 0.18);
+    }
+
+    .project-photo-frame {
+      position: relative;
+      height: 255px;
+      width: 100%;
+      background: #091526;
+      overflow: hidden;
+      border-bottom: 1.5px solid var(--glass-border);
+    }
+
+    .project-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s ease;
+    }
+
+    .project-card:hover .project-photo-frame img {
+      transform: scale(1.06);
+    }
+
+    .project-photo-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(9, 21, 38, 0.08) 0%, rgba(9, 21, 38, 0.42) 100%);
+      pointer-events: none;
+    }
+
+    .project-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 5;
+      padding: 0.36rem 0.88rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--teal);
+      box-shadow: 0 4px 12px rgba(9, 21, 38, 0.18);
+    }
+
+    .project-card:nth-child(2) .project-badge {
+      color: var(--rose);
+    }
+
+    .project-sensor-tag {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 5;
+      padding: 0.3rem 0.78rem;
+      border-radius: 8px;
+      background: rgba(9, 21, 38, 0.80);
+      backdrop-filter: blur(6px);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .project-body {
+      padding: 1.8rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.38rem;
+      font-weight: 700;
+      color: var(--heading-dark);
+      margin-bottom: 0.65rem;
+    }
+
+    .project-body p {
+      color: var(--text-body);
+      font-size: 0.95rem;
+      margin-bottom: 1.3rem;
+      flex: 1;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag-list span {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.28rem 0.74rem;
+      border-radius: 8px;
+      background: rgba(13, 148, 136, 0.12);
+      color: var(--teal);
+    }
+
+    .tag-list span:nth-child(even) {
+      background: rgba(225, 29, 72, 0.11);
+      color: var(--rose);
+    }
+
+    /* ============================================================
+       10. CONTACT SECTION & SOCIAL ICONS
+       ============================================================ */
+    .contact-box {
+      background: var(--glass-surface);
+      backdrop-filter: blur(20px) saturate(165%);
+      -webkit-backdrop-filter: blur(20px) saturate(165%);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 26px;
+      box-shadow: var(--shadow-elevated);
+      padding: 2.75rem;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 2.5rem;
+    }
+
+    .contact-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--heading-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-info p {
+      color: var(--text-body);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-rows {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .info-rows li {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--heading-dark);
+    }
+
+    .c-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(13, 148, 136, 0.16), rgba(225, 29, 72, 0.16));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .socials {
+      display: flex;
+      gap: 0.85rem;
+    }
+
+    .social-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1.5px solid rgba(13, 148, 136, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--heading-dark);
+      transition: all 0.25s ease;
+    }
+
+    .social-btn:hover {
+      background: linear-gradient(135deg, var(--teal), var(--rose));
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateY(-3px);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--heading-dark);
+      margin-bottom: 0.38rem;
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 0.88rem 1.05rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1.5px solid rgba(9, 21, 38, 0.12);
+      color: var(--heading-dark);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .input-box:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+    }
+
+    textarea.input-box {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* ============================================================
+       11. FOOTER & KEYFRAMES
+       ============================================================ */
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 1.85rem 1rem;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(9, 21, 38, 0.08);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--heading-dark);
+    }
+
+    @keyframes slowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ============================================================
+       12. RESPONSIVE BREAKPOINTS (MOBILE, TABLET, DESKTOP)
+       ============================================================ */
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .accent-bar {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-bio {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .inline-pillars,
+      .hero-buttons,
+      .hero-socials {
+        justify-content: center;
+      }
+
+      .orbital-3d-backdrop {
+        width: 580px;
+        height: 580px;
+        right: -12%;
+        opacity: 0.38;
+      }
+
+      .about-cards-grid,
+      .contact-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 740px) {
+      .navbar {
+        border-radius: 22px;
+        flex-wrap: wrap;
+        padding: 0.75rem 1.15rem;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-cta {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        padding-top: 0.65rem;
+        border-top: 1px solid rgba(9, 21, 38, 0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: center;
+      }
+
+      .pillar-sep {
+        display: none;
+      }
+
+      .inline-pillars {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+      }
+
+      .orbital-ring-frame {
+        width: 290px;
+        height: 310px;
+      }
+
+      .profile-sculpted-frame {
+        width: 270px;
+        height: 290px;
+      }
+
+      .skills-grid,
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-box {
+        padding: 1.75rem 1.35rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= TRANSPARENT WORLD ATLAS BACKDROP ================= -->
+  <div class="world-atlas-backdrop" aria-hidden="true"></div>
+  <div class="atlas-glass-tint" aria-hidden="true"></div>
+
+  <!-- ================= SEAMLESS PHOTOREALISTIC 3D EARTH + ORBITING SATELLITE ================= -->
+  <div class="orbital-3d-backdrop" aria-hidden="true">
+    <div id="unified-earth-orbit-canvas"></div>
+  </div>
+
+  <!-- ================= FLOATING GLASS NAVBAR ================= -->
+  <div class="navbar-wrap">
+    <nav class="navbar">
+      <a href="#home" class="brand">
+        <span class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon>
+            <line x1="9" y1="3" x2="9" y2="18"></line>
+            <line x1="15" y1="6" x2="15" y2="21"></line>
+          </svg>
+        </span>
+        ahmad<span>.</span>
+      </a>
+
+      <button class="hamburger" id="menuBtn" aria-label="Toggle Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <a href="#contact" class="nav-cta">Get In Touch</a>
+    </nav>
+  </div>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section id="home" class="hero-section">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Left Side: Bio & Highlights -->
+        <div class="hero-left">
+          <div class="greeting-pill">👋 Hello, It's Me</div>
+          <h1>Ahmad Ali</h1>
+          <div class="hero-subtitle">And I'm a <span>GIS &amp; Remote Sensing Analyst</span></div>
+          <div class="accent-bar"></div>
+
+          <p class="hero-bio">
+            I am a passionate <strong>BS GIS undergraduate</strong> at the <strong>University of the Punjab, Lahore</strong>, specializing in cadastral mapping, satellite remote sensing, and Geospatial AI. I love transforming satellite imagery and spatial datasets into high-precision cartographic solutions.
+          </p>
+
+          <div class="inline-pillars">
+            <div class="pillar-item">
+              <span class="pillar-icon">🗺️</span>
+              <span>GIS &amp; Cadastral QC</span>
+            </div>
+            <span class="pillar-sep"></span>
+            <div class="pillar-item">
+              <span class="pillar-icon">🛰️</span>
+              <span>Remote Sensing &amp; GEE</span>
+            </div>
+            <span class="pillar-sep"></span>
+            <div class="pillar-item">
+              <span class="pillar-icon">📊</span>
+              <span>Spatial Analytics</span>
+            </div>
+          </div>
+
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-solid">Explore My Projects &rarr;</a>
+            <a href="#contact" class="btn btn-outline">Contact Me &#9993;</a>
+          </div>
+
+          <div class="hero-socials">
+            <a href="https://www.linkedin.com/in/ahmad-ali-7b34632b2" target="_blank" rel="noopener" class="circle-social" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+              </svg>
+            </a>
+            <a href="https://github.com/GIS-Ahmad-Ali" target="_blank" rel="noopener" class="circle-social" aria-label="GitHub (GIS-Ahmad-Ali)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+              </svg>
+            </a>
+            <a href="mailto:gorcha1214@gmail.com" class="circle-social" aria-label="Email">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Side: Clean Sculpted Profile Photo Frame -->
+        <div class="hero-visual-cluster">
+          <div class="orbital-ring-frame">
+            <div class="profile-sculpted-frame">
+              <div class="profile-inner-mask">
+                <img
+                  src="profile.jpg"
+                  alt="Ahmad Ali Profile Picture"
+                  onload="this.nextElementSibling.style.display='none'"
+                  onerror="if(!this.dataset.step){this.dataset.step='1';this.src='profile.jpeg';}else if(this.dataset.step==='1'){this.dataset.step='2';this.src='profile.png';}else{this.style.display='none';}"
+                />
+                <div class="profile-slot-placeholder">
+                  <div class="slot-avatar-badge">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                  <strong>Ahmad Ali</strong>
+                  <span>Save photo as profile.jpg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT SECTION ================= -->
+  <section id="about" class="section-block">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">About Me</span>
+        <h2>Education, Experience &amp; Recognition</h2>
+        <p>Combining academic GIS excellence at the University of the Punjab with real-world cadastral and climate AI projects.</p>
+      </div>
+
+      <div class="about-cards-grid">
+        <div class="about-feature-card">
+          <div class="about-card-icon">🎓</div>
+          <h3>BS Geographical Information System</h3>
+          <p>
+            Undergraduate student at the <strong>University of the Punjab, Lahore</strong> (2024–Present), focusing on spatial analysis, remote sensing, cartography, and geospatial databases.
+          </p>
+        </div>
+
+        <div class="about-feature-card">
+          <div class="about-card-icon">📐</div>
+          <h3>PULSE Project &amp; AI Geo Navigators</h3>
+          <p>
+            Worked as a <strong>GIS Analyst &amp; Cadastral Mapping Intern</strong> on the World Bank-aligned PULSE Project, and currently serve as a <strong>Geospatial AI &amp; Climate Intelligence Trainee</strong> using Google Earth Engine.
+          </p>
+        </div>
+
+        <div class="about-feature-card">
+          <div class="about-card-icon">🏆</div>
+          <h3>1st Place — GIS Day Competition</h3>
+          <p>
+            Winner of the <strong>GIS Day Mapping Competition</strong> held at CGIS, University of the Punjab, for designing and digitizing a high-precision cartographic map of Model Town, Lahore.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SKILLS SECTION (8 SKILLS WITH PROGRESS BARS) ================= -->
+  <section id="skills" class="section-block">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag rose">Technical Stack</span>
+        <h2>GIS, Remote Sensing &amp; Web Skills</h2>
+        <p>Core geospatial software, satellite earth-observation platforms, and modern frontend technologies.</p>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">🗺️ ArcGIS Pro &amp; ArcMap</span>
+            <span class="skill-pct">95%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 95%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">🌐 QGIS &amp; Cartographic Design</span>
+            <span class="skill-pct">92%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 92%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">🛰️ Google Earth Engine (GEE) &amp; Remote Sensing</span>
+            <span class="skill-pct">88%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 88%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">📐 Cadastral Mapping, Parcel Cutting &amp; QC</span>
+            <span class="skill-pct">94%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 94%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">🐍 Python &amp; Geospatial AI / ML</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 85%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">💻 HTML5 &amp; CSS3 (Web GIS Frontend)</span>
+            <span class="skill-pct">87%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 87%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">📊 Spatial Analytics (Power BI, R &amp; Excel)</span>
+            <span class="skill-pct">84%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 84%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-top">
+            <span class="skill-name">🏗️ Google Earth Pro &amp; AutoCAD 2D/3D</span>
+            <span class="skill-pct">82%</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width: 82%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS SECTION (2 CARDS WITH REALISTIC PHOTOGRAPHS) ================= -->
+  <section id="projects" class="section-block">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Spatial Showcase</span>
+        <h2>Featured GIS &amp; Remote Sensing Projects</h2>
+        <p>High-resolution aerial land-cover classification and multi-layer geological digitization work.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project Card 1: Real Aerial Coastal & Vegetation Photograph of Zanzibar -->
+        <article class="project-card">
+          <div class="project-photo-frame">
+            <span class="project-badge">Drone Imagery &amp; LULC</span>
+            <img
+              src="https://images.unsplash.com/photo-1586861635167-e5223aadc9fe?auto=format&fit=crop&w=1000&q=85"
+              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&w=1000&q=85';"
+              alt="Aerial Coastline and Land Cover of Zanzibar, Tanzania"
+            />
+            <span class="project-sensor-tag">AERIAL LULC • ZANZIBAR, TANZANIA</span>
+          </div>
+          <div class="project-body">
+            <h3>Georeferencing &amp; LULC of Zanzibar (Tanzania)</h3>
+            <p>
+              Georeferenced high-resolution aerial drone imagery of Zanzibar and executed Land Use / Land Cover (LULC) classification to map coastal settlements, vegetation zones, and land-cover transitions.
+            </p>
+            <div class="tag-list">
+              <span>Drone Imagery</span>
+              <span>Georeferencing</span>
+              <span>LULC Classification</span>
+              <span>Remote Sensing</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 2: Real Mountain & River Valley Photograph of Kashmir -->
+        <article class="project-card">
+          <div class="project-photo-frame">
+            <span class="project-badge">Cartographic Digitization</span>
+            <img
+              src="https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=1000&q=85"
+              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=85';"
+              alt="Himalayan Mountain Terrain and River Basin in Azad Jammu & Kashmir"
+            />
+            <span class="project-sensor-tag">GEOLOGY &amp; HYDROLOGY • AJK</span>
+          </div>
+          <div class="project-body">
+            <h3>Digitization of Mineral Map of Azad Jammu &amp; Kashmir</h3>
+            <p>
+              Digitized multi-layer geological and hydrological datasets across Azad Jammu &amp; Kashmir, mapping mineral deposit zones, administrative boundaries, major rivers, and cities with structured attributes.
+            </p>
+            <div class="tag-list">
+              <span>ArcMap / QGIS</span>
+              <span>Vector Digitization</span>
+              <span>Minerals &amp; Hydrology</span>
+              <span>Cartography</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT SECTION ================= -->
+  <section id="contact" class="section-block">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag rose">Connect</span>
+        <h2>Get In Touch</h2>
+        <p>Available for GIS analysis, remote sensing research, and Web GIS collaborations.</p>
+      </div>
+
+      <div class="contact-box">
+        <div class="contact-info">
+          <h3>Let's Collaborate on Spatial Solutions</h3>
+          <p>
+            Whether you need satellite-based environmental monitoring, cadastral digitization, or interactive geospatial web maps, send a message anytime.
+          </p>
+
+          <ul class="info-rows">
+            <li>
+              <span class="c-icon">📍</span>
+              <span>Lahore, Punjab, Pakistan</span>
+            </li>
+            <li>
+              <span class="c-icon">✉️</span>
+              <span>gorcha1214@gmail.com</span>
+            </li>
+            <li>
+              <span class="c-icon">📞</span>
+              <span>0312-7461614 / 0331-7131562</span>
+            </li>
+          </ul>
+
+          <div class="socials">
+            <a href="https://www.linkedin.com/in/ahmad-ali-7b34632b2" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+              </svg>
+            </a>
+            <a href="https://github.com/GIS-Ahmad-Ali" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub (GIS-Ahmad-Ali)">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+              </svg>
+            </a>
+            <a href="mailto:gorcha1214@gmail.com" class="social-btn" aria-label="Email">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent.'); this.reset();">
+          <div class="field">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" class="input-box" placeholder="Enter your full name" required />
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" class="input-box" placeholder="you@example.com" required />
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" class="input-box" placeholder="Write your message or GIS project inquiry..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-solid">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <p>&copy; 2026 Ahmad Ali • GIS &amp; Remote Sensing Portfolio | <a href="https://github.com/GIS-Ahmad-Ali" target="_blank" rel="noopener" style="color: var(--teal); text-decoration: underline;">github.com/GIS-Ahmad-Ali</a></p>
+  </footer>
+
+  <!-- Three.js Photorealistic 3D Earth + Aerospace Satellite Engine -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+    if (typeof THREE !== 'undefined') {
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.setCrossOrigin('anonymous');
+
+      function createFallbackEarthTexture() {
+        const c = document.createElement('canvas');
+        c.width = 1024; c.height = 512;
+        const ctx = c.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 512);
+        grad.addColorStop(0, '#072a47');
+        grad.addColorStop(0.5, '#0b4f7a');
+        grad.addColorStop(1, '#072a47');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1024, 512);
+        return new THREE.CanvasTexture(c);
+      }
+
+      function createPhotovoltaicTexture() {
+        const c = document.createElement('canvas');
+        c.width = 512; c.height = 256;
+        const ctx = c.getContext('2d');
+
+        const grad = ctx.createLinearGradient(0, 0, 512, 256);
+        grad.addColorStop(0, '#041e3a');
+        grad.addColorStop(0.5, '#0b3b60');
+        grad.addColorStop(1, '#04263b');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 256);
+
+        ctx.strokeStyle = 'rgba(186, 230, 253, 0.65)';
+        ctx.lineWidth = 2;
+        for (let x = 0; x <= 512; x += 32) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke();
+        }
+        for (let y = 0; y <= 256; y += 32) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(512, y); ctx.stroke();
+        }
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+        ctx.lineWidth = 1;
+        for (let y = 10; y < 256; y += 16) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(512, y); ctx.stroke();
+        }
+        return new THREE.CanvasTexture(c);
+      }
+
+      function createCrinkledFoilBump() {
+        const c = document.createElement('canvas');
+        c.width = 512; c.height = 512;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#808080';
+        ctx.fillRect(0, 0, 512, 512);
+
+        for (let i = 0; i < 1800; i++) {
+          const x = Math.random() * 512;
+          const y = Math.random() * 512;
+          const len = 8 + Math.random() * 22;
+          const ang = Math.random() * Math.PI * 2;
+          ctx.strokeStyle = i % 2 === 0 ? 'rgba(235,235,235,0.55)' : 'rgba(40,40,40,0.55)';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
+          ctx.stroke();
+        }
+        const tex = new THREE.CanvasTexture(c);
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+        return tex;
+      }
+
+      const orbitContainer = document.getElementById('unified-earth-orbit-canvas');
+      let scrollOrbitOffset = 0;
+
+      if (orbitContainer) {
+        const width = orbitContainer.clientWidth || 820;
+        const height = orbitContainer.clientHeight || 820;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+        camera.position.set(0, 1.45, 7.3);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.15;
+        orbitContainer.appendChild(renderer.domElement);
+
+        scene.add(new THREE.AmbientLight(0xdbeafe, 0.65));
+
+        const sunLight = new THREE.DirectionalLight(0xfffbeb, 2.8);
+        sunLight.position.set(6, 4, 6);
+        scene.add(sunLight);
+
+        const earthShine = new THREE.DirectionalLight(0x14b8a6, 0.9);
+        earthShine.position.set(-5, -3, 3);
+        scene.add(earthShine);
+
+        const earthSystem = new THREE.Group();
+        earthSystem.rotation.z = 0.28;
+
+        const earthMat = new THREE.MeshPhongMaterial({
+          map: createFallbackEarthTexture(),
+          specular: new THREE.Color(0x38bdf8),
+          shininess: 28,
+          bumpScale: 0.045
+        });
+
+        textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg', (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace;
+          earthMat.map = tex;
+          earthMat.needsUpdate = true;
+        });
+
+        textureLoader.load('https://unpkg.com/three-globe/example/img/earth-topology.png', (bump) => {
+          earthMat.bumpMap = bump;
+          earthMat.needsUpdate = true;
+        });
+
+        textureLoader.load('https://unpkg.com/three-globe/example/img/earth-water.png', (spec) => {
+          earthMat.specularMap = spec;
+          earthMat.needsUpdate = true;
+        });
+
+        const earthMesh = new THREE.Mesh(new THREE.SphereGeometry(1.78, 72, 72), earthMat);
+        earthSystem.add(earthMesh);
+
+        const cloudMat = new THREE.MeshLambertMaterial({
+          transparent: true,
+          opacity: 0.72,
+          depthWrite: false
+        });
+        textureLoader.load('https://unpkg.com/three-globe/example/img/earth-clouds.png', (cTex) => {
+          cloudMat.map = cTex;
+          cloudMat.needsUpdate = true;
+        });
+        const cloudMesh = new THREE.Mesh(new THREE.SphereGeometry(1.815, 72, 72), cloudMat);
+        earthSystem.add(cloudMesh);
+
+        const atmosphereMat = new THREE.ShaderMaterial({
+          transparent: true,
+          side: THREE.BackSide,
+          blending: THREE.AdditiveBlending,
+          vertexShader: `
+            varying vec3 vNormal;
+            void main() {
+              vNormal = normalize(normalMatrix * normal);
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            varying vec3 vNormal;
+            void main() {
+              float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.2);
+              gl_FragColor = vec4(0.14, 0.75, 0.85, 0.75) * intensity;
+            }
+          `
+        });
+        const atmosphereMesh = new THREE.Mesh(new THREE.SphereGeometry(1.98, 64, 64), atmosphereMat);
+        earthSystem.add(atmosphereMesh);
+
+        scene.add(earthSystem);
+
+        const orbitPlane = new THREE.Group();
+        orbitPlane.rotation.x = 0.42;
+        orbitPlane.rotation.z = -0.34;
+        scene.add(orbitPlane);
+
+        const orbitRadius = 2.68;
+        const orbitTrack = new THREE.Mesh(
+          new THREE.TorusGeometry(orbitRadius, 0.008, 16, 180),
+          new THREE.MeshBasicMaterial({
+            color: 0xe11d48,
+            transparent: true,
+            opacity: 0.48
+          })
+        );
+        orbitTrack.rotation.x = Math.PI / 2;
+        orbitPlane.add(orbitTrack);
+
+        const satellite = new THREE.Group();
+        const foilBump = createCrinkledFoilBump();
+        const solarTex = createPhotovoltaicTexture();
+
+        const goldKaptonMat = new THREE.MeshStandardMaterial({
+          color: 0xf59e0b,
+          bumpMap: foilBump,
+          bumpScale: 0.03,
+          metalness: 0.92,
+          roughness: 0.24
+        });
+
+        const brushedAluminumMat = new THREE.MeshStandardMaterial({
+          color: 0xe2e8f0,
+          metalness: 0.94,
+          roughness: 0.18
+        });
+
+        const darkCarbonMat = new THREE.MeshStandardMaterial({
+          color: 0x0f172a,
+          metalness: 0.55,
+          roughness: 0.35
+        });
+
+        const busCore = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.52, 6), goldKaptonMat);
+        busCore.rotation.z = Math.PI / 2;
+        satellite.add(busCore);
+
+        [-0.25, 0.25].forEach(xPos => {
+          const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.225, 0.225, 0.04, 18), brushedAluminumMat);
+          ring.rotation.z = Math.PI / 2;
+          ring.position.x = xPos;
+          satellite.add(ring);
+        });
+
+        [-0.12, 0.12].forEach(zPos => {
+          const thruster = new THREE.Mesh(new THREE.ConeGeometry(0.032, 0.07, 12), brushedAluminumMat);
+          thruster.rotation.z = Math.PI / 2;
+          thruster.position.set(-0.29, 0.06, zPos);
+          satellite.add(thruster);
+        });
+
+        const baffle = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.145, 0.25, 28), darkCarbonMat);
+        baffle.position.set(0.08, -0.22, 0);
+        satellite.add(baffle);
+
+        const goldBezel = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.012, 12, 28), goldKaptonMat);
+        goldBezel.rotation.x = Math.PI / 2;
+        goldBezel.position.set(0.08, -0.345, 0);
+        satellite.add(goldBezel);
+
+        const opticalLens = new THREE.Mesh(
+          new THREE.CircleGeometry(0.105, 28),
+          new THREE.MeshPhysicalMaterial({
+            color: 0x0284c7,
+            metalness: 0.9,
+            roughness: 0.05,
+            clearcoat: 1.0
+          })
+        );
+        opticalLens.rotation.x = Math.PI / 2;
+        opticalLens.position.set(0.08, -0.342, 0);
+        satellite.add(opticalLens);
+
+        const scanCone = new THREE.Mesh(
+          new THREE.ConeGeometry(0.28, 0.85, 24, 1, true),
+          new THREE.MeshBasicMaterial({
+            color: 0x14b8a6,
+            transparent: true,
+            opacity: 0.14,
+            side: THREE.DoubleSide,
+            depthWrite: false
+          })
+        );
+        scanCone.position.set(0.08, -0.76, 0);
+        satellite.add(scanCone);
+
+        [-0.08, 0.08].forEach(zPos => {
+          const tracker = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.09, 14), darkCarbonMat);
+          tracker.position.set(0.16, 0.21, zPos);
+          tracker.rotation.x = zPos > 0 ? 0.35 : -0.35;
+          satellite.add(tracker);
+        });
+
+        const dishReflector = new THREE.Mesh(
+          new THREE.SphereGeometry(0.175, 28, 18, 0, Math.PI * 2, 0, Math.PI * 0.45),
+          brushedAluminumMat
+        );
+        dishReflector.position.set(-0.14, 0.25, 0);
+        dishReflector.rotation.x = Math.PI;
+        satellite.add(dishReflector);
+
+        const feedMast = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.16, 8), brushedAluminumMat);
+        feedMast.position.set(-0.14, 0.30, 0);
+        satellite.add(feedMast);
+
+        const solarWingMat = new THREE.MeshPhysicalMaterial({
+          map: solarTex,
+          metalness: 0.65,
+          roughness: 0.18,
+          clearcoat: 0.85,
+          clearcoatRoughness: 0.12
+        });
+
+        function buildSolarWing(sideSign) {
+          const wingGroup = new THREE.Group();
+
+          const strut = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.32, 10), brushedAluminumMat);
+          strut.rotation.x = Math.PI / 2;
+          strut.position.z = sideSign * 0.34;
+          wingGroup.add(strut);
+
+          [0.68, 1.16].forEach((zOffset) => {
+            const panel = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.012, 0.44), solarWingMat);
+            panel.position.z = sideSign * zOffset;
+            wingGroup.add(panel);
+
+            const frame = new THREE.Mesh(new THREE.BoxGeometry(0.355, 0.008, 0.455), brushedAluminumMat);
+            frame.position.z = sideSign * zOffset;
+            wingGroup.add(frame);
+          });
+
+          return wingGroup;
+        }
+
+        const portWing = buildSolarWing(1);
+        const starboardWing = buildSolarWing(-1);
+        satellite.add(portWing);
+        satellite.add(starboardWing);
+
+        orbitPlane.add(satellite);
+
+        let baseAngle = 0.6;
+        function animateSpaceScene() {
+          requestAnimationFrame(animateSpaceScene);
+
+          earthMesh.rotation.y += 0.002;
+          cloudMesh.rotation.y += 0.0027;
+
+          baseAngle += 0.0048;
+          const angle = baseAngle + scrollOrbitOffset;
+
+          satellite.position.x = Math.cos(angle) * orbitRadius;
+          satellite.position.z = Math.sin(angle) * orbitRadius;
+          satellite.position.y = 0;
+
+          satellite.rotation.y = -angle + Math.PI / 2;
+
+          const wingPitch = Math.sin(angle) * 0.28;
+          portWing.rotation.x = wingPitch;
+          starboardWing.rotation.x = wingPitch;
+
+          renderer.render(scene, camera);
+        }
+        animateSpaceScene();
+      }
+
+      const navAnchors = document.querySelectorAll('.nav-links a');
+      const sections = document.querySelectorAll('section');
+
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const progress = Math.min(1, Math.max(0, scrollY / maxScroll));
+
+        scrollOrbitOffset = progress * Math.PI * 2;
+
+        let currentId = 'home';
+        sections.forEach(sec => {
+          if (scrollY >= sec.offsetTop - 160) {
+            currentId = sec.getAttribute('id');
+          }
+        });
+        navAnchors.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === `#${currentId}`);
+        });
+      }, { passive: true });
+    }
+  </script>
+</body>
+</html>
